@@ -7,5 +7,7 @@ all:
 	gcc $(INCLUDES) -o $(NAME) $(LIB) -lftprintf \
 		$(SRC_PATH)app.c \
 		$(SRC_PATH)path.c \
+		$(SRC_PATH)elem.c \
+		$(SRC_PATH)recursive.c \
 		$(SRC_PATH)main.c
 

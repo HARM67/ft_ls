@@ -8,7 +8,7 @@ t_path	*new_path(char *str)
 	if (rt == 0)
 		exit (1);
 	rt->str = ft_strdup(str);
-	rt->size = ft_strlen(str);
+	rt->len = ft_strlen(str);
 	return (rt);
 }
 
@@ -18,12 +18,14 @@ void	push_path(t_app *app, char *str)
 	{
 		app->first_path = new_path(str);
 		app->last_path = app->first_path;
+		app->path_len += app->first_path->len;
 	}
 	else
 	{
 		app->last_path->next = new_path(str);
 		app->last_path->next->previous = app->last_path;
 		app->last_path = app->last_path->next;
+		app->path_len += app->last_path->len;
 	}
 	app->nb_path++;
 }
@@ -40,6 +42,7 @@ void	pop_path(t_app *app)
 		app->last_path = app->last_path->previous;
 		app->last_path->next = 0;
 	}
+	app->path_len -= tmp->len;
 	free(tmp->str);
 	free(tmp);
 	app->nb_path--;
@@ -64,5 +67,22 @@ void	print_path(t_app *app)
 
 char	*path_str(t_app *app)
 {
+	char *rt;
+	t_path	*tmp;
+	unsigned int i;
 
+	tmp = app->first_path;
+	i = app->nb_path;
+	rt = (char*)ft_memalloc(sizeof(char) * (app->path_len + i + 1));
+	if (rt == 0)
+		exit(1);
+	while (i && tmp)
+	{
+		ft_strcat(rt, tmp->str);
+		ft_strcat(rt, "/");
+		tmp = tmp->next;
+		i--;
+	}
+	ft_strcat(rt, "\0");
+	return (rt);
 }
