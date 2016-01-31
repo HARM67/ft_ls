@@ -2,6 +2,9 @@
 # define FT_LS_H
 # include <sys/ioctl.h>
 # include <dirent.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <pwd.h>
 # include <stdlib.h>
 # include "ft_printf.h"
 
@@ -16,13 +19,19 @@ typedef struct		s_path
 typedef struct		s_elem
 {
 	char			name[256];
+	char			*path;
 	unsigned int	name_len;
 	unsigned int	size;
 	unsigned int	type;
+	struct stat		stat;
+	struct dirent	*dirent;
 	struct s_elem	*next;
 	struct s_elem	*previous;
 	struct s_elem	*next_sort;
 	struct s_elem	*Previous_sort;
+	char			*user_name;
+	char			*groupe_name;
+	struct passwd	*passwd;
 }					t_elem;
 
 typedef struct		s_lst_elem
@@ -30,6 +39,9 @@ typedef struct		s_lst_elem
 	t_elem			*first;
 	t_elem			*last;
 	unsigned int	nb_elem;
+	unsigned int	max_name_len;
+	unsigned int	max_size;
+
 }					t_lst_elem;
 
 typedef struct		s_app
@@ -57,16 +69,33 @@ t_path				*new_path(char *str);
 void				push_path(t_app *app, char *str);
 void				pop_path(t_app *app);
 void				print_path(t_app *app);
-char				*path_str(t_app *app);
+char				*path_str(t_app *app, char option);
 
 /*
 ** elem.c
 */
 t_elem				*new_elem(struct dirent *d);
-void				push_elem(t_lst_elem *lst, struct dirent *d);
+void				push_elem(t_app * app, t_lst_elem *lst, struct dirent *d);
+void				clean_lst(t_lst_elem *lst);
+void				print_elem(t_elem *elm, t_lst_elem *lst);
+
+/*
+** lst_elem.c
+*/
+void				print_lst(t_lst_elem *lst);
 
 /*
 ** recursive.c
 */
 void				parcour(t_app *app);
+
+/*
+** read_stat.c
+*/
+void				read_stat(t_elem *elm);
+
+/*
+** mode.c
+*/
+void				write_mode(mode_t mode);
 #endif

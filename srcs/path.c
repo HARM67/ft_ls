@@ -65,7 +65,7 @@ void	print_path(t_app *app)
 	ft_putstr("\n");
 }
 
-char	*path_str(t_app *app)
+char	*path_str(t_app *app, char	option)
 {
 	char *rt;
 	t_path	*tmp;
@@ -79,7 +79,8 @@ char	*path_str(t_app *app)
 	while (i && tmp)
 	{
 		ft_strcat(rt, tmp->str);
-		ft_strcat(rt, "/");
+		if (/*option & 1 ||*/ tmp->next)
+			ft_strcat(rt, "/");
 		tmp = tmp->next;
 		i--;
 	}
