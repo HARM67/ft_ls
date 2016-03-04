@@ -1,5 +1,5 @@
 NAME=ft_ls
-SRC_PATH=./SRCS/
+SRC_PATH=./srcs/
 INCLUDES=-I./includes -I./ft_printf/includes
 LIB=-L./ft_printf/
 

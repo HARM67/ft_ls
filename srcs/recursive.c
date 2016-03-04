@@ -19,7 +19,7 @@ void	parcour(t_app *app)
 	while (lst.first)
 	{
 		push_path(app, lst.first->name);
-		if (lst.first->type == 4 && lst.first->name[0] != '.')
+		if ((lst.first->stat.st_mode & 0040000) && lst.first->name[0] != '.')
 			parcour(app);
 		pop_path(app);
 		lst.first = lst.first->next;
@@ -28,4 +28,4 @@ void	parcour(t_app *app)
 	free(d);
 	clean_lst(&lst);
 	free(path);
-			}
+}
