@@ -5,6 +5,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/xattr.h>
+# include <time.h>
 # include <pwd.h>
 # include <grp.h>
 # include <stdlib.h>
@@ -45,11 +46,13 @@ typedef struct		s_lst_elem
 	unsigned int	max_name_len;
 	unsigned int	max_grp_len;
 	unsigned int	max_size;
+	unsigned int	max_nlink;
 
 }					t_lst_elem;
 
 typedef struct		s_app
 {
+	int				(*compare)(struct s_app *, t_elem*, t_elem*);
 	int				ac;
 	char			**av;
 	t_path			*first_path;
@@ -58,6 +61,8 @@ typedef struct		s_app
 	unsigned int	path_len;
 	int				row;
 	int				col;
+	unsigned char	show_hidden;
+	char			reverse_sort;
 }					t_app;
 
 /*
@@ -78,6 +83,7 @@ char				*path_str(t_app *app, char option);
 /*
 ** elem.c
 */
+void				insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d);
 t_elem				*new_elem(struct dirent *d);
 void				push_elem(t_app * app, t_lst_elem *lst, struct dirent *d);
 void				clean_lst(t_lst_elem *lst);
@@ -86,6 +92,7 @@ void				print_elem(t_elem *elm, t_lst_elem *lst);
 /*
 ** lst_elem.c
 */
+unsigned int		nbr_len(unsigned int nbr);
 void				print_lst(t_lst_elem *lst);
 
 /*
@@ -102,4 +109,10 @@ void				read_stat(t_elem *elm);
 ** mode.c
 */
 void				write_mode(mode_t mode);
+
+/*
+** comparison.c
+*/
+int					compare_size(t_app *app, t_elem *elm1, t_elem *elm2);
+int					compare_ascii(t_app *app, t_elem *elm1, t_elem *elm2);
 #endif

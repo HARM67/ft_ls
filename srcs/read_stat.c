@@ -2,6 +2,6 @@
 
 void	read_stat(t_elem *elm)
 {
-	stat(elm->path, &elm->stat);
+	lstat(elm->path, &elm->stat);
 }
 

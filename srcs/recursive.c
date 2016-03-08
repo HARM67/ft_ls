@@ -14,7 +14,8 @@ void	parcour(t_app *app)
 	ft_bzero(&lst, sizeof(t_lst_elem));
 	ft_printf("%s\n",path);
 	while ((d = readdir(dirp)))
-		push_elem(app, &lst, d);
+	//	push_elem(app, &lst, d);
+		insert_elm(app, &lst, d);
 	print_lst(&lst);
 	/*
 	while (lst.first)

@@ -12,5 +12,6 @@ all:
 		$(SRC_PATH)recursive.c \
 		$(SRC_PATH)read_stat.c \
 		$(SRC_PATH)mode.c \
+		$(SRC_PATH)comparison.c \
 		$(SRC_PATH)main.c
 
