@@ -16,6 +16,7 @@ void	parcour(t_app *app)
 	while ((d = readdir(dirp)))
 		push_elem(app, &lst, d);
 	print_lst(&lst);
+	/*
 	while (lst.first)
 	{
 		push_path(app, lst.first->name);
@@ -23,7 +24,7 @@ void	parcour(t_app *app)
 			parcour(app);
 		pop_path(app);
 		lst.first = lst.first->next;
-	}
+	}*/
 	closedir(dirp);
 	free(d);
 	clean_lst(&lst);

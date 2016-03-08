@@ -4,7 +4,9 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <sys/xattr.h>
 # include <pwd.h>
+# include <grp.h>
 # include <stdlib.h>
 # include "ft_printf.h"
 
@@ -21,14 +23,15 @@ typedef struct		s_elem
 	char			name[256];
 	char			*path;
 	unsigned int	name_len;
+	unsigned int	grp_len;
 	unsigned int	size;
 	unsigned int	type;
-	struct stat		stat;
 	struct dirent	*dirent;
 	struct s_elem	*next;
 	struct s_elem	*previous;
 	struct s_elem	*next_sort;
 	struct s_elem	*Previous_sort;
+	struct stat		stat;
 	char			*user_name;
 	char			*groupe_name;
 	struct passwd	*passwd;
@@ -40,6 +43,7 @@ typedef struct		s_lst_elem
 	t_elem			*last;
 	unsigned int	nb_elem;
 	unsigned int	max_name_len;
+	unsigned int	max_grp_len;
 	unsigned int	max_size;
 
 }					t_lst_elem;

@@ -11,6 +11,6 @@ void	init_app(t_app *app)
 
 void	run_app(t_app *app)
 {
-	push_path(app, ".");
+	push_path(app, "/");
 	parcour(app);
 }
