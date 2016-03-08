@@ -115,4 +115,5 @@ void				write_mode(mode_t mode);
 */
 int					compare_size(t_app *app, t_elem *elm1, t_elem *elm2);
 int					compare_ascii(t_app *app, t_elem *elm1, t_elem *elm2);
+int					compare_modif(t_app *app, t_elem * elm1, t_elem *elm2);
 #endif

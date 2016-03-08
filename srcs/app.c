@@ -8,7 +8,8 @@ void	init_app(t_app *app)
 	app->row = w.ws_row;
 	app->col = w.ws_col;
 	app->compare = *compare_ascii;
-	app->reverse_sort = 0;
+	app->reverse_sort = 1;
+	app->show_hidden = 0;
 }
 
 void	run_app(t_app *app)
