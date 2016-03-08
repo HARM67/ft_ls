@@ -37,13 +37,12 @@ void	print_elem(t_elem *elm, t_lst_elem *lst)
 {
 	write_mode(elm->stat.st_mode);
 	write_attribut("/");
-	ft_printf(" %*d %-*s  %-*s  %*d %d ",
+	ft_printf(" %*d %-*s  %-*s  %*d ",
 			nbr_len(lst->max_nlink),  elm->stat.st_nlink,
 			lst->max_name_len, elm->user_name,
 			lst->max_grp_len, elm->groupe_name,
-			lst->max_size, elm->stat.st_size,
-			elm->stat.st_mtimespec.tv_sec/*,
-			elm->name*/);
+			lst->max_size, elm->stat.st_size
+			);
 	print_date(ctime(&elm->stat.st_mtimespec.tv_sec));
 	ft_printf(" %s\n",elm->name );
 
@@ -187,11 +186,10 @@ void	clean_lst(t_lst_elem *lst)
 	tmp = lst->first;
 	while (tmp)
 	{
+		tmp2 = tmp->next;
 		if (tmp->path)
 			free(tmp->path);
-		tmp2 = tmp->next;
 		free(tmp);
-		tmp = tmp->next;
 		tmp = tmp2;
 	}
 }

@@ -30,8 +30,6 @@ typedef struct		s_elem
 	struct dirent	*dirent;
 	struct s_elem	*next;
 	struct s_elem	*previous;
-	struct s_elem	*next_sort;
-	struct s_elem	*Previous_sort;
 	struct stat		stat;
 	char			*user_name;
 	char			*groupe_name;
@@ -62,6 +60,7 @@ typedef struct		s_app
 	int				row;
 	int				col;
 	unsigned char	show_hidden;
+	unsigned char	recursive;
 	char			reverse_sort;
 }					t_app;
 

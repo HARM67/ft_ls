@@ -10,6 +10,7 @@ void	init_app(t_app *app)
 	app->compare = *compare_ascii;
 	app->reverse_sort = 1;
 	app->show_hidden = 0;
+	app->recursive = 1;
 }
 
 void	run_app(t_app *app)
