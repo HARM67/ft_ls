@@ -24,6 +24,7 @@ typedef struct		s_elem
 	char			name[256];
 	char			*path;
 	unsigned int	name_len;
+	unsigned int	user_len;
 	unsigned int	grp_len;
 	unsigned int	size;
 	unsigned int	type;
@@ -42,15 +43,18 @@ typedef struct		s_lst_elem
 	t_elem			*last;
 	unsigned int	nb_elem;
 	unsigned int	max_name_len;
+	unsigned int	max_file_name;
 	unsigned int	max_grp_len;
 	unsigned int	max_size;
 	unsigned int	max_nlink;
+	unsigned int	total;
 
 }					t_lst_elem;
 
 typedef struct		s_app
 {
 	int				(*compare)(struct s_app *, t_elem*, t_elem*);
+	void			(*print)(struct s_app *, t_lst_elem*);
 	int				ac;
 	char			**av;
 	t_path			*first_path;
@@ -61,6 +65,9 @@ typedef struct		s_app
 	int				col;
 	unsigned char	show_hidden;
 	unsigned char	recursive;
+	unsigned char	recursive_depth;
+	unsigned char	color;
+	unsigned char	list;
 	char			reverse_sort;
 }					t_app;
 
@@ -86,13 +93,14 @@ void				insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d);
 t_elem				*new_elem(struct dirent *d);
 void				push_elem(t_app * app, t_lst_elem *lst, struct dirent *d);
 void				clean_lst(t_lst_elem *lst);
-void				print_elem(t_elem *elm, t_lst_elem *lst);
+void				print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst);
 
 /*
 ** lst_elem.c
 */
 unsigned int		nbr_len(unsigned int nbr);
-void				print_lst(t_lst_elem *lst);
+void				print_lst(t_app *app, t_lst_elem *lst);
+void				print_lst_list(t_app *app, t_lst_elem *lst);
 
 /*
 ** recursive.c

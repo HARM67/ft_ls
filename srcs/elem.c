@@ -33,7 +33,8 @@ void	print_date(char *date)
 	}
 }
 
-void	print_elem(t_elem *elm, t_lst_elem *lst)
+
+void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 {
 	write_mode(elm->stat.st_mode);
 	write_attribut("/");
@@ -44,7 +45,16 @@ void	print_elem(t_elem *elm, t_lst_elem *lst)
 			lst->max_size, elm->stat.st_size
 			);
 	print_date(ctime(&elm->stat.st_mtimespec.tv_sec));
+	if (app->color)
+	{
+		if (elm->stat.st_mode & 040000)
+		ft_printf("{FG_CYAN}{BOLD}");
+		else if (elm->stat.st_mode & 0111)
+		ft_printf("{FG_RED}");
+	}
 	ft_printf(" %s\n",elm->name );
+	if (app->color)
+		ft_printf("{EOC}");
 
 }
 
@@ -61,12 +71,14 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 	pop_path(app);
 	read_stat(rt);
 	rt->dirent = d;
+	if (rt->name_len > lst->max_file_name)
+		lst->max_file_name = rt->name_len;
 
 	pswd = getpwuid(rt->stat.st_uid);
 	rt->user_name = pswd->pw_name;
-	rt->name_len = ft_strlen(rt->user_name);
+	rt->user_len = ft_strlen(rt->user_name);
 	if (rt->name_len > lst->max_name_len)
-		lst->max_name_len = rt->name_len;
+		lst->max_name_len = rt->user_len;
 
 	grp = getgrgid(rt->stat.st_gid);
 	rt->groupe_name = grp->gr_name;
@@ -78,6 +90,9 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 		lst->max_size = rt->stat.st_size;
 	if (rt->stat.st_nlink > lst->max_nlink)
 		lst->max_nlink = rt->stat.st_nlink;
+	lst->total += rt->stat.st_size / 512;
+	if (rt->stat.st_size % 512)
+		lst->total++;
 	return (rt);
 }
 

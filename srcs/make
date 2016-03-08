@@ -11,7 +11,7 @@ void	init_app(t_app *app)
 	app->print = *print_lst_list;
 	app->reverse_sort = 0;
 	app->show_hidden = 0;
-	app->recursive = 0;
+	app->recursive = 1;
 	app->color = 1;
 }
 

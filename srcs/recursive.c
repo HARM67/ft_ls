@@ -16,11 +16,13 @@ void	parcour(t_app *app)
 		return ;
 	}
 	ft_bzero(&lst, sizeof(t_lst_elem));
-	ft_printf("%s\n",path);
+	if (app->recursive_depth)
+		ft_printf("\n%s:\n",path);
+	app->recursive_depth++;
 	free(path);
 	while ((d = readdir(dirp)))
 		insert_elm(app, &lst, d);
-	print_lst(&lst);
+	app->print(app, &lst);
 	tmp = lst.first;
 	if (app->recursive)
 		while (tmp)
@@ -34,4 +36,5 @@ void	parcour(t_app *app)
 	clean_lst(&lst);
 	closedir(dirp);
 	free(d);
+	app->recursive_depth--;
 }
