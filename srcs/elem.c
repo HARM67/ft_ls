@@ -15,10 +15,7 @@ t_elem	*new_elem(struct dirent *d)
 
 static void	write_attribut(char *path)
 {
-	//ft_printf("%d",getxattr(path, "", 0, 0, 0, 0));
-	//	ft_printf("@");
-	//else
-		ft_printf(" ");
+	ft_printf(" ");
 }
 
 void	print_date(char *date)

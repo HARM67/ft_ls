@@ -11,6 +11,7 @@ all:
 		$(SRC_PATH)lst_elem.c \
 		$(SRC_PATH)recursive.c \
 		$(SRC_PATH)read_stat.c \
+		$(SRC_PATH)read_arg.c \
 		$(SRC_PATH)mode.c \
 		$(SRC_PATH)comparison.c \
 		$(SRC_PATH)main.c

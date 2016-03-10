@@ -4,6 +4,7 @@ void	parcour(t_app *app)
 {
 	DIR				*dirp;
 	struct dirent	*d;
+	static int		temoin = 0;
 	char			*path;
 	t_lst_elem		lst;
 	t_elem			*tmp;
@@ -16,8 +17,11 @@ void	parcour(t_app *app)
 		return ;
 	}
 	ft_bzero(&lst, sizeof(t_lst_elem));
+	if (temoin)
+		ft_putchar('\n');
+	++temoin;
 	if (app->recursive_depth)
-		ft_printf("\n%s:\n",path);
+		ft_printf("%s:\n",path);
 	app->recursive_depth++;
 	free(path);
 	while ((d = readdir(dirp)))

@@ -48,8 +48,14 @@ typedef struct		s_lst_elem
 	unsigned int	max_size;
 	unsigned int	max_nlink;
 	unsigned int	total;
-
 }					t_lst_elem;
+
+typedef struct		s_p_arg
+{
+	char			*path;
+	struct s_p_arg	*next;
+	struct s_p_arg	*previous;
+}					t_p_arg;
 
 typedef struct		s_app
 {
@@ -57,8 +63,11 @@ typedef struct		s_app
 	void			(*print)(struct s_app *, t_lst_elem*);
 	int				ac;
 	char			**av;
+	t_p_arg			*first_p_arg;
+	t_p_arg			*last_p_arg;
 	t_path			*first_path;
 	t_path			*last_path;
+	unsigned int	nb_p_arg;
 	unsigned int	nb_path;
 	unsigned int	path_len;
 	int				row;
@@ -68,6 +77,8 @@ typedef struct		s_app
 	unsigned char	recursive_depth;
 	unsigned char	color;
 	unsigned char	list;
+	unsigned char	read_mode;
+	unsigned char	temoin_recursive;
 	char			reverse_sort;
 }					t_app;
 
@@ -123,4 +134,11 @@ void				write_mode(mode_t mode);
 int					compare_size(t_app *app, t_elem *elm1, t_elem *elm2);
 int					compare_ascii(t_app *app, t_elem *elm1, t_elem *elm2);
 int					compare_modif(t_app *app, t_elem * elm1, t_elem *elm2);
+
+/*
+** read_arg.c
+*/
+t_p_arg				*new_p_arg(t_app *app, char *path);
+void				insert_p_arg(t_app *app, char *path);
+void				read_arg(t_app *app);
 #endif
