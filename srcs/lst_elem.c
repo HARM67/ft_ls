@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 14:31:54 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/10 18:04:43 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/10 21:16:15 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_lst(t_app *app, t_lst_elem *lst)
 	unsigned int	nb_col;
 	t_elem			*elm;
 
-	elm = lst->first;
+	elm = (app->reverse_sort) ? lst->last : lst->first;
 	i = 0;
 	nb_col = app->col / (lst->max_file_name + 1);
 	while (elm)
@@ -49,7 +49,7 @@ void	print_lst(t_app *app, t_lst_elem *lst)
 		ft_printf("%-*s", lst->max_file_name, elm->name);
 		if (app->color)
 			ft_printf("{EOC}");
-		elm = elm->next;
+		elm = (app->reverse_sort) ? elm->previous : elm->next;
 		i++;
 		if ((i % nb_col) == 0)
 			ft_putchar('\n');
@@ -64,11 +64,11 @@ void			print_lst_list(t_app *app, t_lst_elem *lst)
 	t_elem			*elm;
 
 	lst->max_size = nbr_len(lst->max_size);
-	elm = lst->first;
+	elm = (app->reverse_sort) ? lst->last : lst->first;
 	ft_printf("total %d\n", lst->total);
 	while (elm)
 	{
 		print_elem_list(app, elm, lst);
-		elm = elm->next;
+		elm = (app->reverse_sort) ? elm->previous : elm->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 21:16:01 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/10 17:22:03 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/10 21:09:17 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,10 @@ int		check_arg(t_app *app, char *arg)
 			app->show_hidden = 1;
 		else if (arg[i] == 'r')
 			app->reverse_sort = 1;
+		else if (arg[i] == 'S')
+			app->compare = *compare_size;
+		else if (arg[i] == 't')
+			app->compare = *compare_modif;
 		else
 		{
 			app->read_mode = 1;

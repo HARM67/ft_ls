@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/03/10 20:00:40 by mfroehly          #+#    #+#             */
+/*   Updated: 2016/03/10 20:14:45 by mfroehly         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_LS_H
 # define FT_LS_H
 # include <sys/ioctl.h>
@@ -11,6 +23,10 @@
 # include <stdlib.h>
 # include "ft_printf.h"
 
+typedef struct stat		t_stat;
+typedef struct passwd	t_passwd;
+typedef struct dirent	t_dirent;
+
 typedef struct		s_path
 {
 	char			*str;
@@ -22,19 +38,20 @@ typedef struct		s_path
 typedef struct		s_elem
 {
 	char			name[256];
+	char			link_path[256];
 	char			*path;
 	unsigned int	name_len;
 	unsigned int	user_len;
 	unsigned int	grp_len;
 	unsigned int	size;
 	unsigned int	type;
-	struct dirent	*dirent;
-	struct s_elem	*next;
-	struct s_elem	*previous;
-	struct stat		stat;
 	char			*user_name;
 	char			*groupe_name;
-	struct passwd	*passwd;
+	t_stat			stat;
+	t_passwd		*passwd;
+	t_dirent		*dirent;
+	struct s_elem	*next;
+	struct s_elem	*previous;
 }					t_elem;
 
 typedef struct		s_lst_elem
@@ -103,7 +120,6 @@ char				*path_str(t_app *app, char option);
 */
 void				insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d);
 t_elem				*new_elem(struct dirent *d);
-void				push_elem(t_app * app, t_lst_elem *lst, struct dirent *d);
 void				clean_lst(t_lst_elem *lst);
 void				print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst);
 
@@ -134,7 +150,7 @@ void				write_mode(mode_t mode);
 */
 int					compare_size(t_app *app, t_elem *elm1, t_elem *elm2);
 int					compare_ascii(t_app *app, t_elem *elm1, t_elem *elm2);
-int					compare_modif(t_app *app, t_elem * elm1, t_elem *elm2);
+int					compare_modif(t_app *app, t_elem *elm1, t_elem *elm2);
 
 /*
 ** read_arg.c

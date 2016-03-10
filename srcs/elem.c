@@ -13,10 +13,18 @@ t_elem	*new_elem(struct dirent *d)
 	return (rt);
 }
 
-static void	write_attribut(char *path)
+static void	write_attribut(t_elem *elm)
 {
-	path = 0;
-	ft_printf(" ");
+	char	*path;
+
+	if ((elm->stat.st_mode & 0120000) == 0120000)
+		path = elm->link_path;
+	else
+		path = elm->path;
+	if (listxattr(path, 0, 0, 0) > 0)
+		ft_printf("@");
+	else
+		ft_printf(" ");
 }
 
 void	print_date(char *date)
@@ -38,7 +46,7 @@ void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 
 	ft_bzero(buf, 256);
 	write_mode(elm->stat.st_mode);
-	write_attribut("/");
+	write_attribut(elm);
 	ft_printf(" %*d %-*s  %-*s  %*d ",
 		nbr_len(lst->max_nlink),  elm->stat.st_nlink,
 		lst->max_name_len, elm->user_name,
@@ -59,7 +67,7 @@ void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 		if (elm->stat.st_mode & 01000)
 			ft_printf("{FG_GREEN}{HIGHLIGHT}");
 	}
-	ft_printf("%s",elm->name, buf);
+	ft_printf("%s",elm->name);
 	if (app->color)
 		ft_printf("{EOC}");
 	if ((elm->stat.st_mode & 0120000) == 0120000)
@@ -103,6 +111,9 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 	if (rt->stat.st_nlink > lst->max_nlink)
 		lst->max_nlink = rt->stat.st_nlink;
 	lst->total += rt->stat.st_blocks;
+
+	if ((rt->stat.st_mode & 0120000) == 0120000)
+		readlink(rt->path, rt->link_path, 256);
 	return (rt);
 }
 
@@ -146,45 +157,6 @@ void	insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d)
 	elm->next = n_elm;
 	n_elm->previous = elm;
 	lst->last = n_elm;
-}
-
-void	push_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
-{
-	struct passwd	*pswd;
-	struct group	*grp;
-
-	if (!lst->nb_elem)
-	{
-		lst->first = new_elem(d);
-		lst->last = lst->first;
-	}
-	else
-	{
-		lst->last->next = new_elem(d);
-		lst->last->next->previous = lst->last;
-		lst->last = lst->last->next;
-	}
-	push_path(app, lst->last->name);
-	lst->last->path = path_str(app, 0);
-	pop_path(app);
-	read_stat(lst->last);
-	lst->last->dirent = d;
-
-	pswd = getpwuid(lst->last->stat.st_uid);
-	lst->last->user_name = pswd->pw_name;
-	lst->last->name_len = ft_strlen(lst->last->user_name);
-	if (lst->last->name_len > lst->max_name_len)
-		lst->max_name_len = lst->last->name_len;
-
-	grp = getgrgid(lst->last->stat.st_gid);
-	lst->last->groupe_name = grp->gr_name;
-	lst->last->grp_len = ft_strlen(lst->last->groupe_name);
-	if (lst->last->grp_len > lst->max_grp_len)
-		lst->max_grp_len = lst->last->grp_len;
-
-	if (lst->last->stat.st_size > lst->max_size)
-		lst->max_size = lst->last->stat.st_size;
-	lst->nb_elem++;
 }
 
 void	pop_elem(t_lst_elem *lst)
