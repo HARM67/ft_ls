@@ -1,0 +1,2 @@
+make       [0m app.c       [0m comparison.c[0m elem.c      [0m lst_elem.c  [0m main.c      [0m mode.c      [0m path.c      [0m read_arg.c  [0m read_stat.c [0m recursive.c [0m
+write_name.c[0m

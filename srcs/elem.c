@@ -15,6 +15,7 @@ t_elem	*new_elem(struct dirent *d)
 
 static void	write_attribut(char *path)
 {
+	path = 0;
 	ft_printf(" ");
 }
 
@@ -33,26 +34,40 @@ void	print_date(char *date)
 
 void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 {
+	char buf[256];
+
+	ft_bzero(buf, 256);
 	write_mode(elm->stat.st_mode);
 	write_attribut("/");
 	ft_printf(" %*d %-*s  %-*s  %*d ",
-			nbr_len(lst->max_nlink),  elm->stat.st_nlink,
-			lst->max_name_len, elm->user_name,
-			lst->max_grp_len, elm->groupe_name,
-			lst->max_size, elm->stat.st_size
-			);
+		nbr_len(lst->max_nlink),  elm->stat.st_nlink,
+		lst->max_name_len, elm->user_name,
+		lst->max_grp_len, elm->groupe_name, lst->max_size, elm->stat.st_size);
 	print_date(ctime(&elm->stat.st_mtimespec.tv_sec));
+	ft_putchar(' ');
 	if (app->color)
 	{
 		if (elm->stat.st_mode & 040000)
-		ft_printf("{FG_CYAN}{BOLD}");
+			ft_printf("{FG_CYAN}{BOLD}");
 		else if (elm->stat.st_mode & 0111)
-		ft_printf("{FG_RED}");
+		{
+			if ((elm->stat.st_mode & 0120000) == 0120000)
+				ft_printf("{FG_PINK}");
+			else
+				ft_printf("{FG_RED}");
+		}
+		if (elm->stat.st_mode & 01000)
+			ft_printf("{FG_GREEN}{HIGHLIGHT}");
 	}
-	ft_printf(" %s\n",elm->name );
+	ft_printf("%s",elm->name, buf);
 	if (app->color)
 		ft_printf("{EOC}");
-
+	if ((elm->stat.st_mode & 0120000) == 0120000)
+	{
+		readlink(elm->path, buf, 256);
+		ft_printf(" -> %s", buf);
+	}
+	ft_putchar('\n');
 }
 
 static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
@@ -74,7 +89,7 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 	pswd = getpwuid(rt->stat.st_uid);
 	rt->user_name = pswd->pw_name;
 	rt->user_len = ft_strlen(rt->user_name);
-	if (rt->name_len > lst->max_name_len)
+	if (rt->user_len > lst->max_name_len)
 		lst->max_name_len = rt->user_len;
 
 	grp = getgrgid(rt->stat.st_gid);
@@ -87,9 +102,7 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 		lst->max_size = rt->stat.st_size;
 	if (rt->stat.st_nlink > lst->max_nlink)
 		lst->max_nlink = rt->stat.st_nlink;
-	lst->total += rt->stat.st_size / 512;
-	if (rt->stat.st_size % 512)
-		lst->total++;
+	lst->total += rt->stat.st_blocks;
 	return (rt);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 21:16:01 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/10 15:56:34 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/10 17:22:03 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ t_p_arg	*new_p_arg(t_app *app, char *path)
 {
 	t_p_arg *rt;
 
+	app = 0;
 	rt = (t_p_arg*)ft_memalloc(sizeof(t_p_arg));
 	if (!rt)
 		exit (1);
@@ -89,6 +90,11 @@ int		check_arg(t_app *app, char *arg)
 			app->show_hidden = 1;
 		else if (arg[i] == 'r')
 			app->reverse_sort = 1;
+		else
+		{
+			app->read_mode = 1;
+			return (0);
+		}
 		rt = 1;
 		i++;
 	}
@@ -97,7 +103,7 @@ int		check_arg(t_app *app, char *arg)
 
 void		read_arg(t_app *app)
 {
-	unsigned int	i;
+	int	i;
 
 	i = 1;
 	while (i < app->ac)
@@ -106,7 +112,10 @@ void		read_arg(t_app *app)
 				check_arg(app, app->av[i]))
 			;
 		else
+		{
 			insert_p_arg(app, app->av[i]);
+			app->read_mode = 1;
+		}
 		i++;
 	}
 	if (app->nb_p_arg > 1)

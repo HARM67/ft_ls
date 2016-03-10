@@ -1,10 +1,11 @@
 NAME=ft_ls
 SRC_PATH=./srcs/
-INCLUDES=-I./includes -I./ft_printf/includes
+INCLUDES=-I./includes -I./ft_printf/includes/
 LIB=-L./ft_printf/
+FLAG= -Wall -Werror -Wextra
 
 all: 
-	gcc $(INCLUDES) -o $(NAME) $(LIB) -lftprintf -g \
+	gcc $(FLAG) $(INCLUDES) -o $(NAME) $(LIB) -lftprintf -g \
 		$(SRC_PATH)app.c \
 		$(SRC_PATH)path.c \
 		$(SRC_PATH)elem.c \
@@ -16,3 +17,12 @@ all:
 		$(SRC_PATH)comparison.c \
 		$(SRC_PATH)main.c
 
+$(NAME): all
+
+re: clean all
+
+clean:
+	rm -f *.o
+
+fclean: clean
+	rm -f $(NAME)

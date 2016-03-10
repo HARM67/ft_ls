@@ -48,6 +48,7 @@ typedef struct		s_lst_elem
 	unsigned int	max_size;
 	unsigned int	max_nlink;
 	unsigned int	total;
+	unsigned int	size;
 }					t_lst_elem;
 
 typedef struct		s_p_arg

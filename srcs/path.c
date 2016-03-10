@@ -71,6 +71,7 @@ char	*path_str(t_app *app, char	option)
 	t_path	*tmp;
 	unsigned int i;
 
+	option = 0;
 	tmp = app->first_path;
 	i = app->nb_path;
 	rt = (char*)ft_memalloc(sizeof(char) * (app->path_len + i + 1));
@@ -79,7 +80,7 @@ char	*path_str(t_app *app, char	option)
 	while (i && tmp)
 	{
 		ft_strcat(rt, tmp->str);
-		if (/*option & 1 ||*/ tmp->next)
+		if (tmp->next && ft_strcmp(tmp->str, "/"))
 			ft_strcat(rt, "/");
 		tmp = tmp->next;
 		i--;
