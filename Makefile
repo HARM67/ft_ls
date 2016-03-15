@@ -2,7 +2,8 @@ NAME=ft_ls
 SRC_PATH=./srcs/
 INCLUDES=-I./includes -I./ft_printf/includes/
 LIB=-L./ft_printf/
-FLAG= -Wall -Werror -Wextra
+FLAG= -g
+#-Wall -Werror -Wextra
 
 all: 
 	gcc $(FLAG) $(INCLUDES) -o $(NAME) $(LIB) -lftprintf -g \
@@ -15,6 +16,7 @@ all:
 		$(SRC_PATH)read_arg.c \
 		$(SRC_PATH)mode.c \
 		$(SRC_PATH)comparison.c \
+		$(SRC_PATH)put_error.c \
 		$(SRC_PATH)main.c
 
 $(NAME): all

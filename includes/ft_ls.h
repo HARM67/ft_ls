@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 20:00:40 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/10 20:14:45 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/14 06:17:07 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <pwd.h>
 # include <grp.h>
 # include <stdlib.h>
+# include <errno.h>
 # include "ft_printf.h"
 
 typedef struct stat		t_stat;
@@ -66,6 +67,7 @@ typedef struct		s_lst_elem
 	unsigned int	max_nlink;
 	unsigned int	total;
 	unsigned int	size;
+	unsigned char	no_total;
 }					t_lst_elem;
 
 typedef struct		s_p_arg
@@ -73,6 +75,7 @@ typedef struct		s_p_arg
 	char			*path;
 	struct s_p_arg	*next;
 	struct s_p_arg	*previous;
+	unsigned char	type;
 }					t_p_arg;
 
 typedef struct		s_app
@@ -98,6 +101,8 @@ typedef struct		s_app
 	unsigned char	read_mode;
 	unsigned char	temoin_recursive;
 	char			reverse_sort;
+	unsigned char	have_file;
+	unsigned char	have_dir;
 }					t_app;
 
 /*
@@ -126,6 +131,7 @@ void				print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst);
 /*
 ** lst_elem.c
 */
+void				print_name(t_app *app, t_lst_elem *lst, t_elem *elm);
 unsigned int		nbr_len(unsigned int nbr);
 void				print_lst(t_app *app, t_lst_elem *lst);
 void				print_lst_list(t_app *app, t_lst_elem *lst);
@@ -158,4 +164,10 @@ int					compare_modif(t_app *app, t_elem *elm1, t_elem *elm2);
 t_p_arg				*new_p_arg(t_app *app, char *path);
 void				insert_p_arg(t_app *app, char *path);
 void				read_arg(t_app *app);
+
+
+/*
+** put_error.c
+*/
+void				put_error(char *msg);
 #endif

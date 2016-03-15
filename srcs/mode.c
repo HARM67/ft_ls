@@ -2,22 +2,19 @@
 
 static void	write_file_type(mode_t mode)
 {
-	if ((mode & 0120000) == 0120000)
-	{
-		//ft_printf("[%#o]", mode & 0120000);
+	if ((mode & 0770000) == 0120000)
 		ft_putchar('l');
-	}
-	else if (mode & 0010000)
-		ft_putchar('p');
-	else if (mode & 0020000)
+	else if ((mode & 0770000) == 0020000)
 		ft_putchar('c');
-	else if (mode & 0040000)
-		ft_putchar('d');
-	else if (mode & 0060000)
+	else if ((mode & 0770000) == 0010000)
+		ft_putchar('p');
+	else if ((mode & 0770000) == 0060000)
 		ft_putchar('b');
-	else if (mode & 0100000)
+	else if ((mode & 0770000) == 0040000)
+		ft_putchar('d');
+	else if ((mode & 0770000) == 0100000)
 		ft_putchar('-');
-	else if ((mode & 0140000) == 0140000)
+	else if ((mode & 0770000) == 0140000)
 		ft_putchar('s');
 }
 

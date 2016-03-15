@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 21:16:01 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/10 21:09:17 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/14 03:43:04 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	insert_p_arg(t_app *app, char *path)
 	t_p_arg	*new;
 	t_p_arg	*tmp;
 
+	if (*path == 0)
+		put_error("ft_ls: fts_open: No such file or directory");
 	tmp = app->first_p_arg;
 	new = new_p_arg(app, path);
 	if (!app->nb_p_arg)
@@ -96,7 +98,10 @@ int		check_arg(t_app *app, char *arg)
 			app->compare = *compare_modif;
 		else
 		{
-			app->read_mode = 1;
+			ft_fprintf(2, "ft_ls: illegal option -- %c\n"
+			"usage: ls [-GRSalrt] [file ...]", arg[i]);
+			exit (1);
+//			app->read_mode = 1;
 			return (0);
 		}
 		rt = 1;

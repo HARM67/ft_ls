@@ -27,15 +27,23 @@ static void	write_attribut(t_elem *elm)
 		ft_printf(" ");
 }
 
-void	print_date(char *date)
+void	print_date(t_app *app, time_t elm_time)
 {
 	unsigned int i;
+	char		*date;
 
-	i = 4;
-	while (i <= 15)
+	date = ctime(&elm_time);
+	i = 3;
+	if ((time(0) - elm_time) < 15552000)
+		while (++i <= 15)
+			ft_putchar(date[i]);
+	else
 	{
-		ft_putchar(date[i]);
-		i++;
+		while (++i <= 10)
+			ft_putchar(date[i]);
+		i = 18;
+		while (++i <= 23)
+			ft_putchar(date[i]);
 	}
 }
 
@@ -51,25 +59,10 @@ void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 		nbr_len(lst->max_nlink),  elm->stat.st_nlink,
 		lst->max_name_len, elm->user_name,
 		lst->max_grp_len, elm->groupe_name, lst->max_size, elm->stat.st_size);
-	print_date(ctime(&elm->stat.st_mtimespec.tv_sec));
+	print_date(app, elm->stat.st_mtimespec.tv_sec);
 	ft_putchar(' ');
-	if (app->color)
-	{
-		if (elm->stat.st_mode & 040000)
-			ft_printf("{FG_CYAN}{BOLD}");
-		else if (elm->stat.st_mode & 0111)
-		{
-			if ((elm->stat.st_mode & 0120000) == 0120000)
-				ft_printf("{FG_PINK}");
-			else
-				ft_printf("{FG_RED}");
-		}
-		if (elm->stat.st_mode & 01000)
-			ft_printf("{FG_GREEN}{HIGHLIGHT}");
-	}
-	ft_printf("%s",elm->name);
-	if (app->color)
-		ft_printf("{EOC}");
+	lst->max_file_name = 0;
+	print_name(app, lst, elm);
 	if ((elm->stat.st_mode & 0120000) == 0120000)
 	{
 		readlink(elm->path, buf, 256);
@@ -124,6 +117,7 @@ void	insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d)
 
 	if (d->d_name[0] == '.' && !app->show_hidden)
 		return ;
+	lst->size++;
 	elm = lst->first;
 	n_elm = prepare_elem(app, lst, d);
 	if (!lst->nb_elem)

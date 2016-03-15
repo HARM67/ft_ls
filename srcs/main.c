@@ -9,5 +9,6 @@ int main(int ac, char **av)
 	app.av = av;
 	init_app(&app);
 	run_app(&app);
+	//while (1);
 	return (0);
 }
