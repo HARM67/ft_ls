@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/14 02:59:03 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/14 06:14:57 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/15 08:03:23 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	init_app(t_app *app)
 void	print_file(t_app *app)
 {
 	t_p_arg			*tmp;
+	t_p_arg			*tmp2;
 	t_lst_elem		lst;
 	struct dirent	d;
 
@@ -46,7 +47,7 @@ void	print_file(t_app *app)
 	app->print(app, &lst);
 	if (app->have_file && app->have_dir)
 		ft_putchar('\n');
-	clean_lst(&lst);
+	//clean_lst(&lst);
 }
 
 void	check_invalide(t_app *app)
@@ -71,12 +72,14 @@ void	check_invalide(t_app *app)
 		else
 			app->have_dir = 1;
 		tmp = tmp->next;
+		closedir(dirp);
 	}
 }
 
 void	run_app(t_app *app)
 {
 	t_p_arg	*tmp;
+	t_p_arg	*tmp2;
 
 	read_arg(app);
 	tmp = app->first_p_arg;
@@ -84,9 +87,11 @@ void	run_app(t_app *app)
 	print_file(app);
 	while (tmp)
 	{
+		tmp2 = tmp->next;
 		push_path(app, tmp->path);
 		parcour(app);
 		pop_path(app);
-		tmp = tmp->next;
+		free(tmp);
+		tmp = tmp2;
 	}
 }

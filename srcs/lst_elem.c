@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 14:31:54 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/15 03:21:39 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/15 08:03:01 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,38 @@ unsigned int	nbr_len(unsigned int nbr)
 	return (rt);
 }
 
+void	print_color_1(t_elem *elm)
+{
+	if ((elm->stat.st_mode & 0770000) == 0020000)
+		ft_printf("{FG_BLUE}{BG_YELLOW}");
+	else if ((elm->stat.st_mode & 0001000) == 0001000 &&
+			(elm->stat.st_mode & 02))
+		ft_printf("{FG_BLACK}{BG_GREEN}");
+	else if (elm->stat.st_mode & 02)
+		ft_printf("{FG_BLACK}{BG_YELLOW}");
+	else if ((elm->stat.st_mode & 0770000) == 040000)
+		ft_printf("{FG_CYAN}{BOLD}");
+	else if ((elm->stat.st_mode & 0770000) == 0120000)
+		ft_printf("{FG_PINK}");
+	else if ((elm->stat.st_mode& 0770000) == 0140000)
+		ft_printf("{FG_GREEN}");
+	else if ((elm->stat.st_mode & 0770000) == 0010000)
+		ft_printf("{FG_YELLOW}");
+	else if (elm->stat.st_mode & 0111)
+		ft_printf("{FG_RED}");
+	else if ((elm->stat.st_mode & 0770000) == 0060000)
+		ft_printf("{FG_BLUE}{BG_CYAN}");
+	else if ((elm->stat.st_mode & 0006000) == 0004000)
+		ft_printf("{FG_BLACK}{BG_RED}");
+	else if ((elm->stat.st_mode & 0006000) == 0002000)
+		ft_printf("{FG_BLACK}{BG_CYAN}");
+}
+
 void	print_name(t_app *app, t_lst_elem *lst, t_elem *elm)
 {
 	if (app->color)
 	{
-		if ((elm->stat.st_mode & 0770000) == 0020000)
-				ft_printf("{FG_BLUE}{BG_YELLOW}");
-		else if ((elm->stat.st_mode & 0770000) == 0060000)
-				ft_printf("{FG_BLUE}{BG_CYAN}");
-		else if ((elm->stat.st_mode & 0770000) == 040000)
-			ft_printf("{FG_CYAN}{BOLD}");
-		else if (elm->stat.st_mode & 0111)
-		{
-			if ((elm->stat.st_mode & 0770000) == 0120000)
-				ft_printf("{FG_PINK}");
-			else
-				ft_printf("{FG_RED}");
-		}
+		print_color_1(elm);
 	}
 	ft_printf("%-*s", lst->max_file_name, elm->name);
 	if (app->color)
@@ -73,6 +88,8 @@ void			print_lst_list(t_app *app, t_lst_elem *lst)
 {
 	t_elem			*elm;
 
+	if (lst->have_periph)
+		lst->max_size = 11111111;
 	lst->max_size = nbr_len(lst->max_size);
 	elm = (app->reverse_sort) ? lst->last : lst->first;
 	if (!lst->no_total)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   elem.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/03/15 03:24:45 by mfroehly          #+#    #+#             */
+/*   Updated: 2016/03/15 04:24:13 by mfroehly         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 t_elem	*new_elem(struct dirent *d)
@@ -17,7 +29,7 @@ static void	write_attribut(t_elem *elm)
 {
 	char	*path;
 
-	if ((elm->stat.st_mode & 0120000) == 0120000)
+	if ((elm->stat.st_mode & 0770000) == 0120000)
 		path = elm->link_path;
 	else
 		path = elm->path;
@@ -55,15 +67,25 @@ void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 	ft_bzero(buf, 256);
 	write_mode(elm->stat.st_mode);
 	write_attribut(elm);
-	ft_printf(" %*d %-*s  %-*s  %*d ",
-		nbr_len(lst->max_nlink),  elm->stat.st_nlink,
-		lst->max_name_len, elm->user_name,
-		lst->max_grp_len, elm->groupe_name, lst->max_size, elm->stat.st_size);
+	if ((elm->stat.st_mode & 0770000) == 0060000 ||
+			(elm->stat.st_mode & 0770000) == 0020000)
+		ft_printf(" %*d %-*s  %-*s %4d,%4d ",
+			nbr_len(lst->max_nlink),  elm->stat.st_nlink,
+			lst->max_name_len, elm->user_name,
+			lst->max_grp_len, elm->groupe_name,
+			(elm->stat.st_rdev & 0xff000000) >> 24,
+			elm->stat.st_rdev & 0xffffff);
+	else
+		ft_printf(" %*d %-*s  %-*s  %*d ",
+			nbr_len(lst->max_nlink),  elm->stat.st_nlink,
+			lst->max_name_len, elm->user_name,
+			lst->max_grp_len, elm->groupe_name,
+			lst->max_size, elm->stat.st_size);
 	print_date(app, elm->stat.st_mtimespec.tv_sec);
 	ft_putchar(' ');
 	lst->max_file_name = 0;
 	print_name(app, lst, elm);
-	if ((elm->stat.st_mode & 0120000) == 0120000)
+	if ((elm->stat.st_mode & 0770000) == 0120000)
 	{
 		readlink(elm->path, buf, 256);
 		ft_printf(" -> %s", buf);
@@ -104,8 +126,10 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 	if (rt->stat.st_nlink > lst->max_nlink)
 		lst->max_nlink = rt->stat.st_nlink;
 	lst->total += rt->stat.st_blocks;
-
-	if ((rt->stat.st_mode & 0120000) == 0120000)
+	if ((rt->stat.st_mode & 0770000) == 0060000 ||
+			(rt->stat.st_mode & 0770000) == 0020000)
+	lst->have_periph = 1;
+	if ((rt->stat.st_mode & 0770000) == 0120000)
 		readlink(rt->path, rt->link_path, 256);
 	return (rt);
 }

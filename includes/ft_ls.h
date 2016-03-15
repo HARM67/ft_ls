@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 20:00:40 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/14 06:17:07 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/15 04:22:34 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct		s_lst_elem
 	unsigned int	total;
 	unsigned int	size;
 	unsigned char	no_total;
+	unsigned char	have_periph;
 }					t_lst_elem;
 
 typedef struct		s_p_arg
