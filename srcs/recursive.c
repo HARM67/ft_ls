@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/21 15:13:25 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:39:30 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 21:33:59 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	parcour2(t_app *app, t_lst_elem *lst)
 {
 	t_elem			*tmp;
 
-	tmp = lst->first;
+	tmp = (app->reverse_sort) ? lst->last : lst->first;
 	if (app->recursive)
 		while (tmp)
 		{
@@ -24,7 +24,7 @@ void	parcour2(t_app *app, t_lst_elem *lst)
 			if ((tmp->stat.st_mode & 0040000) && tmp->name[0] != '.')
 				parcour(app);
 			pop_path(app);
-			tmp = tmp->next;
+			tmp = (app->reverse_sort) ? tmp->previous : tmp->next;
 		}
 	clean_lst(lst);
 	app->recursive_depth--;

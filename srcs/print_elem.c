@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/21 14:37:22 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:53:01 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 19:31:04 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,15 @@ void		print_date(time_t elm_time)
 	}
 }
 
+void		print_elem_list_3(t_lst_elem *lst, t_elem *elm)
+{
+	ft_printf(" %*d %-*s  %-*s  %*d ",
+		nbr_len(lst->max_nlink), elm->stat.st_nlink,
+		lst->max_name_len, elm->user_name,
+		lst->max_grp_len, elm->groupe_name,
+		lst->max_size, elm->stat.st_size);
+}
+
 void		print_elem_list_2(t_lst_elem *lst, t_elem *elm)
 {
 	ft_printf(" %*d %-*s  %-*s %4d,%4d ",
@@ -60,6 +69,11 @@ void		print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 {
 	char buf[256];
 
+	if (elm->rt_lstat == -1)
+	{
+		ft_printf("ft_ls: %s: Permission denied\n", elm->name);
+		return ;
+	}
 	ft_bzero(buf, 256);
 	write_mode(elm->stat.st_mode);
 	write_attribut(elm);
@@ -67,11 +81,7 @@ void		print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
 			(elm->stat.st_mode & 0770000) == 0020000)
 		print_elem_list_2(lst, elm);
 	else
-		ft_printf(" %*d %-*s  %-*s  %*d ",
-	nbr_len(lst->max_nlink), elm->stat.st_nlink,
-	lst->max_name_len, elm->user_name,
-	lst->max_grp_len, elm->groupe_name,
-	lst->max_size, elm->stat.st_size);
+		print_elem_list_3(lst, elm);
 	print_date(elm->stat.st_mtimespec.tv_sec);
 	ft_putchar(' ');
 	lst->max_file_name = 0;

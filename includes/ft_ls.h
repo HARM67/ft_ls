@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 20:00:40 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:14:33 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 21:02:37 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct		s_elem
 	t_dirent		*dirent;
 	struct s_elem	*next;
 	struct s_elem	*previous;
+	char			rt_lstat;
 }					t_elem;
 
 typedef struct		s_lst_elem
@@ -82,6 +83,7 @@ typedef struct		s_p_arg
 typedef struct		s_app
 {
 	int				(*compare)(struct s_app *, t_elem*, t_elem*);
+	int				(*compare2)(struct s_app *, char*, char*);
 	void			(*print)(struct s_app *, t_lst_elem*);
 	int				ac;
 	char			**av;
@@ -176,4 +178,11 @@ int					check_arg(t_app *app, char *arg);
 ** put_error.c
 */
 void				put_error(char *msg);
+
+/*
+** comparison2.c
+*/
+int					compare_size2(t_app *app, char *elm1, char *elm2);
+int					compare_ascii2(t_app *app, char *elm1, char *elm2);
+int					compare_modif2(t_app *app, char *elm1, char *elm2);
 #endif

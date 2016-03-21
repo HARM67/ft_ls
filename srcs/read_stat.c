@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/21 15:08:56 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:10:20 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 19:14:53 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 void	read_stat(t_elem *elm)
 {
-	lstat(elm->path, &elm->stat);
+	elm->rt_lstat = lstat(elm->path, &elm->stat);
 }

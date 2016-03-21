@@ -6,11 +6,32 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/21 15:05:57 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:07:26 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 21:33:51 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+static int	check_arg_3(t_app *app, char *arg, int i)
+{
+	if (arg[i] == 'S')
+	{
+		app->compare = *compare_size;
+		app->compare2 = *compare_size2;
+	}
+	else if (arg[i] == 't')
+	{
+		app->compare = *compare_modif;
+		app->compare2 = *compare_modif2;
+	}
+	else
+	{
+		ft_fprintf(2, "ft_ls: illegal option -- %c\n"
+		"usage: ls [-GRSalrt] [file ...]", arg[i]);
+		exit(1);
+	}
+	return (0);
+}
 
 static int	check_arg_2(t_app *app, char *arg, int i)
 {
@@ -24,17 +45,8 @@ static int	check_arg_2(t_app *app, char *arg, int i)
 		app->show_hidden = 1;
 	else if (arg[i] == 'r')
 		app->reverse_sort = 1;
-	else if (arg[i] == 'S')
-		app->compare = *compare_size;
-	else if (arg[i] == 't')
-		app->compare = *compare_modif;
 	else
-	{
-		ft_fprintf(2, "ft_ls: illegal option -- %c\n"
-		"usage: ls [-GRSalrt] [file ...]", arg[i]);
-		exit(1);
-		return (1);
-	}
+		check_arg_3(app, arg, i);
 	return (0);
 }
 

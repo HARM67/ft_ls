@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/14 02:59:03 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:52:33 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 21:23:32 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	init_app(t_app *app)
 	app->row = w.ws_row;
 	app->col = w.ws_col;
 	app->compare = *compare_ascii;
+	app->compare2 = *compare_ascii2;
 	app->print = *print_lst;
 }
 
@@ -42,7 +43,8 @@ void	print_file(t_app *app)
 		}
 		tmp = tmp->next;
 	}
-	app->print(app, &lst);
+	if (app->have_file)
+		app->print(app, &lst);
 	if (app->have_file && app->have_dir)
 		ft_putchar('\n');
 }
@@ -89,12 +91,12 @@ void	run_app(t_app *app)
 	t_p_arg	*tmp2;
 
 	read_arg(app);
-	tmp = app->first_p_arg;
 	check_invalide(app);
 	print_file(app);
+	tmp = (app->reverse_sort) ? app->last_p_arg : app->first_p_arg;
 	while (tmp)
 	{
-		tmp2 = tmp->next;
+		tmp2 = (app->reverse_sort) ? tmp->previous : tmp->next;
 		push_path(app, tmp->path);
 		parcour(app);
 		pop_path(app);

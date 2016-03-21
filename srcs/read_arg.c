@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 21:16:01 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:07:43 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 21:23:52 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	insert_p_arg_2(t_app *app, t_p_arg *new, t_p_arg *tmp)
 {
 	while (tmp->next)
 	{
-		if (ft_strcmp(tmp->path, new->path) <= 0 &&
-			ft_strcmp(new->path, tmp->next->path) <= 0)
+		if (app->compare2(app, tmp->path, new->path) &&
+			app->compare2(app, new->path, tmp->next->path))
 		{
 			tmp->next->previous = new;
 			new->next = tmp->next;
@@ -61,7 +61,7 @@ void	insert_p_arg(t_app *app, char *path)
 		return ;
 	}
 	app->nb_p_arg++;
-	if (ft_strcmp(new->path, tmp->path) <= 0)
+	if (app->compare2(app, new->path, tmp->path))
 	{
 		tmp->previous = new;
 		new->next = tmp;

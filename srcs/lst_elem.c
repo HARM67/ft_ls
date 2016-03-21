@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 14:31:54 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:49:49 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 19:18:49 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void			print_lst_list(t_app *app, t_lst_elem *lst)
 		lst->max_size = 11111111;
 	lst->max_size = nbr_len(lst->max_size);
 	elm = (app->reverse_sort) ? lst->last : lst->first;
-	if (!lst->no_total && lst->size)
+	if (!lst->no_total && lst->size && lst->last->rt_lstat != -1)
 		ft_printf("total %d\n", lst->total);
 	while (elm)
 	{

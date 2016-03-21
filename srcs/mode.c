@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/15 03:24:39 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/21 15:11:31 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 17:02:02 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static void	write_mode_user(mode_t mode)
 		ft_putchar('w');
 	else
 		ft_putchar('-');
-	if ((mode & 0006000) == 0004000 && (mode & 00000100))
+	if ((mode & 0004000) && (mode & 00000100))
 		ft_putchar('s');
-	else if ((mode & 0006000) == 0004000)
+	else if (mode & 0004000)
 		ft_putchar('S');
 	else if (mode & 0000100)
 		ft_putchar('x');
@@ -60,9 +60,9 @@ static void	write_mode_group(mode_t mode)
 		ft_putchar('w');
 	else
 		ft_putchar('-');
-	if ((mode & 0006000) == 0002000 && (mode & 00000010))
+	if ((mode & 0002000) && (mode & 00000010))
 		ft_putchar('s');
-	else if ((mode & 0006000) == 0002000)
+	else if ((mode & 0002000))
 		ft_putchar('S');
 	else if (mode & 0000010)
 		ft_putchar('x');
