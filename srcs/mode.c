@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/15 03:24:39 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/15 04:33:38 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 15:11:31 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static void	write_mode_other(mode_t mode)
 		ft_putchar('-');
 }
 
-void	write_mode(mode_t mode)
+void		write_mode(mode_t mode)
 {
 	write_file_type(mode);
 	write_mode_user(mode);

@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/10 20:00:40 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/15 04:22:34 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 15:14:33 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct		s_app
 	unsigned int	nb_p_arg;
 	unsigned int	nb_path;
 	unsigned int	path_len;
+	int				temoin;
 	int				row;
 	int				col;
 	unsigned char	show_hidden;
@@ -166,6 +167,10 @@ t_p_arg				*new_p_arg(t_app *app, char *path);
 void				insert_p_arg(t_app *app, char *path);
 void				read_arg(t_app *app);
 
+/*
+** chech_arg.c
+*/
+int					check_arg(t_app *app, char *arg);
 
 /*
 ** put_error.c

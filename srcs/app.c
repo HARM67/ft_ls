@@ -6,12 +6,11 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/14 02:59:03 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/15 08:03:23 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 15:52:33 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
 
 void	init_app(t_app *app)
 {
@@ -27,7 +26,6 @@ void	init_app(t_app *app)
 void	print_file(t_app *app)
 {
 	t_p_arg			*tmp;
-	t_p_arg			*tmp2;
 	t_lst_elem		lst;
 	struct dirent	d;
 
@@ -47,7 +45,14 @@ void	print_file(t_app *app)
 	app->print(app, &lst);
 	if (app->have_file && app->have_dir)
 		ft_putchar('\n');
-	//clean_lst(&lst);
+}
+
+void	print_errno(t_p_arg *tmp)
+{
+	if (errno == 13)
+		ft_printf("ft_ls: %s: Permission denied\n", tmp->path);
+	else
+		ft_printf("ft_ls: %s: No such file or directory\n", tmp->path);
 }
 
 void	check_invalide(t_app *app)
@@ -67,12 +72,14 @@ void	check_invalide(t_app *app)
 				app->have_file = 1;
 			}
 			else
-				ft_printf("ft_ls: %s: No such file or directory\n", tmp->path);
+				print_errno(tmp);
 		}
 		else
+		{
 			app->have_dir = 1;
+			closedir(dirp);
+		}
 		tmp = tmp->next;
-		closedir(dirp);
 	}
 }
 

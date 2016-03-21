@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/03/21 15:10:05 by mfroehly          #+#    #+#             */
+/*   Updated: 2016/03/21 15:11:06 by mfroehly         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 t_path	*new_path(char *str)
@@ -6,7 +18,7 @@ t_path	*new_path(char *str)
 
 	rt = (t_path*)ft_memalloc(sizeof(t_path));
 	if (rt == 0)
-		exit (1);
+		exit(1);
 	rt->str = ft_strdup(str);
 	rt->len = ft_strlen(str);
 	return (rt);
@@ -50,8 +62,8 @@ void	pop_path(t_app *app)
 
 void	print_path(t_app *app)
 {
-	t_path	*tmp;
-	unsigned int i;
+	t_path			*tmp;
+	unsigned int	i;
 
 	tmp = app->first_path;
 	i = app->nb_path;
@@ -65,11 +77,11 @@ void	print_path(t_app *app)
 	ft_putstr("\n");
 }
 
-char	*path_str(t_app *app, char	option)
+char	*path_str(t_app *app, char option)
 {
-	char *rt;
-	t_path	*tmp;
-	unsigned int i;
+	char			*rt;
+	t_path			*tmp;
+	unsigned int	i;
 
 	option = 0;
 	tmp = app->first_path;

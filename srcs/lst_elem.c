@@ -6,7 +6,7 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/08 14:31:54 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/15 08:03:01 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 15:49:49 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ unsigned int	nbr_len(unsigned int nbr)
 	return (rt);
 }
 
-void	print_color_1(t_elem *elm)
+void			print_color_1(t_elem *elm)
 {
 	if ((elm->stat.st_mode & 0770000) == 0020000)
 		ft_printf("{FG_BLUE}{BG_YELLOW}");
@@ -36,7 +36,7 @@ void	print_color_1(t_elem *elm)
 		ft_printf("{FG_CYAN}{BOLD}");
 	else if ((elm->stat.st_mode & 0770000) == 0120000)
 		ft_printf("{FG_PINK}");
-	else if ((elm->stat.st_mode& 0770000) == 0140000)
+	else if ((elm->stat.st_mode & 0770000) == 0140000)
 		ft_printf("{FG_GREEN}");
 	else if ((elm->stat.st_mode & 0770000) == 0010000)
 		ft_printf("{FG_YELLOW}");
@@ -50,7 +50,7 @@ void	print_color_1(t_elem *elm)
 		ft_printf("{FG_BLACK}{BG_CYAN}");
 }
 
-void	print_name(t_app *app, t_lst_elem *lst, t_elem *elm)
+void			print_name(t_app *app, t_lst_elem *lst, t_elem *elm)
 {
 	if (app->color)
 	{
@@ -61,7 +61,7 @@ void	print_name(t_app *app, t_lst_elem *lst, t_elem *elm)
 		ft_printf("{EOC}");
 }
 
-void	print_lst(t_app *app, t_lst_elem *lst)
+void			print_lst(t_app *app, t_lst_elem *lst)
 {
 	unsigned int	i;
 	unsigned int	nb_col;
@@ -92,7 +92,7 @@ void			print_lst_list(t_app *app, t_lst_elem *lst)
 		lst->max_size = 11111111;
 	lst->max_size = nbr_len(lst->max_size);
 	elm = (app->reverse_sort) ? lst->last : lst->first;
-	if (!lst->no_total)
+	if (!lst->no_total && lst->size)
 		ft_printf("total %d\n", lst->total);
 	while (elm)
 	{

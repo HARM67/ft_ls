@@ -1,30 +1,36 @@
 NAME=ft_ls
+INCLUDES=./includes
+INCLUDES_FT_PRINTF=./ft_printf/includes
+CC = gcc
+LIB=./ft_printf/
 SRC_PATH=./srcs/
-INCLUDES=-I./includes -I./ft_printf/includes/
-LIB=-L./ft_printf/
-FLAG= -g
-#-Wall -Werror -Wextra
+FLAG=-Wall -Wextra -Werror
 
-all: 
-	gcc $(FLAG) $(INCLUDES) -o $(NAME) $(LIB) -lftprintf -g \
-		$(SRC_PATH)app.c \
-		$(SRC_PATH)path.c \
-		$(SRC_PATH)elem.c \
-		$(SRC_PATH)lst_elem.c \
-		$(SRC_PATH)recursive.c \
-		$(SRC_PATH)read_stat.c \
-		$(SRC_PATH)read_arg.c \
-		$(SRC_PATH)mode.c \
-		$(SRC_PATH)comparison.c \
-		$(SRC_PATH)put_error.c \
-		$(SRC_PATH)main.c
+SRCS= app.c path.c elem.c elem2.c print_elem.c lst_elem.c recursive.c \
+		read_stat.c read_arg.c check_arg.c mode.c comparison.c put_error.c \
+		main.c
 
-$(NAME): all
+OBJ=$(SRCS:.c=.o)
 
-re: clean all
+all: $(NAME)
+
+$(NAME): $(LIB)libftprintf.a $(OBJ) $(INCLUDES_FT_PRINTF)/ft_printf.h \
+	$(INCLUDES)/ft_ls.h
+	$(CC) -o $(NAME) -I$(INCLUDES_FT_PRINTF) -I$(INCLUDES) $(OBJ) -L$(LIB) -lftprintf
+
+%.o: $(SRC_PATH)%.c $(INCLUDES)/ft_ls.h
+	$(CC) -c $(FLAG) $< -I$(INCLUDES_FT_PRINTF) -I$(INCLUDES)
+
+$(LIB)libftprintf.a:
+	make -C $(LIB)
+	make clean -C $(LIB)
 
 clean:
-	rm -f *.o
+	make clean -C $(LIB)
+	rm -f $(OBJ)
 
 fclean: clean
+	make fclean -C $(LIB)
 	rm -f $(NAME)
+
+re: fclean $(NAME)

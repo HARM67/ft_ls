@@ -6,91 +6,30 @@
 /*   By: mfroehly <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/15 03:24:45 by mfroehly          #+#    #+#             */
-/*   Updated: 2016/03/15 04:24:13 by mfroehly         ###   ########.fr       */
+/*   Updated: 2016/03/21 14:39:28 by mfroehly         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-t_elem	*new_elem(struct dirent *d)
+static void		prepare_elem_2(t_lst_elem *lst, t_elem *rt)
 {
-	t_elem *rt;
-
-	rt = (t_elem*)ft_memalloc(sizeof(t_elem));
-	if (rt == 0)
-		exit(1);
-	ft_strcpy(rt->name, d->d_name);
-	rt->name_len = d->d_namlen;
-	rt->type = d->d_type;
-	return (rt);
-}
-
-static void	write_attribut(t_elem *elm)
-{
-	char	*path;
-
-	if ((elm->stat.st_mode & 0770000) == 0120000)
-		path = elm->link_path;
-	else
-		path = elm->path;
-	if (listxattr(path, 0, 0, 0) > 0)
-		ft_printf("@");
-	else
-		ft_printf(" ");
-}
-
-void	print_date(t_app *app, time_t elm_time)
-{
-	unsigned int i;
-	char		*date;
-
-	date = ctime(&elm_time);
-	i = 3;
-	if ((time(0) - elm_time) < 15552000)
-		while (++i <= 15)
-			ft_putchar(date[i]);
-	else
-	{
-		while (++i <= 10)
-			ft_putchar(date[i]);
-		i = 18;
-		while (++i <= 23)
-			ft_putchar(date[i]);
-	}
-}
-
-
-void	print_elem_list(t_app *app, t_elem *elm, t_lst_elem *lst)
-{
-	char buf[256];
-
-	ft_bzero(buf, 256);
-	write_mode(elm->stat.st_mode);
-	write_attribut(elm);
-	if ((elm->stat.st_mode & 0770000) == 0060000 ||
-			(elm->stat.st_mode & 0770000) == 0020000)
-		ft_printf(" %*d %-*s  %-*s %4d,%4d ",
-			nbr_len(lst->max_nlink),  elm->stat.st_nlink,
-			lst->max_name_len, elm->user_name,
-			lst->max_grp_len, elm->groupe_name,
-			(elm->stat.st_rdev & 0xff000000) >> 24,
-			elm->stat.st_rdev & 0xffffff);
-	else
-		ft_printf(" %*d %-*s  %-*s  %*d ",
-			nbr_len(lst->max_nlink),  elm->stat.st_nlink,
-			lst->max_name_len, elm->user_name,
-			lst->max_grp_len, elm->groupe_name,
-			lst->max_size, elm->stat.st_size);
-	print_date(app, elm->stat.st_mtimespec.tv_sec);
-	ft_putchar(' ');
-	lst->max_file_name = 0;
-	print_name(app, lst, elm);
-	if ((elm->stat.st_mode & 0770000) == 0120000)
-	{
-		readlink(elm->path, buf, 256);
-		ft_printf(" -> %s", buf);
-	}
-	ft_putchar('\n');
+	if (rt->name_len > lst->max_file_name)
+		lst->max_file_name = rt->name_len;
+	if (rt->user_len > lst->max_name_len)
+		lst->max_name_len = rt->user_len;
+	if (rt->grp_len > lst->max_grp_len)
+		lst->max_grp_len = rt->grp_len;
+	if (rt->stat.st_size > lst->max_size)
+		lst->max_size = rt->stat.st_size;
+	if (rt->stat.st_nlink > lst->max_nlink)
+		lst->max_nlink = rt->stat.st_nlink;
+	lst->total += rt->stat.st_blocks;
+	if ((rt->stat.st_mode & 0770000) == 0060000 ||
+			(rt->stat.st_mode & 0770000) == 0020000)
+		lst->have_periph = 1;
+	if ((rt->stat.st_mode & 0770000) == 0120000)
+		readlink(rt->path, rt->link_path, 256);
 }
 
 static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
@@ -100,65 +39,36 @@ static t_elem	*prepare_elem(t_app *app, t_lst_elem *lst, struct dirent *d)
 	struct group	*grp;
 
 	rt = new_elem(d);
-
 	push_path(app, rt->name);
 	rt->path = path_str(app, 0);
 	pop_path(app);
 	read_stat(rt);
 	rt->dirent = d;
-	if (rt->name_len > lst->max_file_name)
-		lst->max_file_name = rt->name_len;
-
 	pswd = getpwuid(rt->stat.st_uid);
 	rt->user_name = pswd->pw_name;
 	rt->user_len = ft_strlen(rt->user_name);
-	if (rt->user_len > lst->max_name_len)
-		lst->max_name_len = rt->user_len;
-
 	grp = getgrgid(rt->stat.st_gid);
 	rt->groupe_name = grp->gr_name;
 	rt->grp_len = ft_strlen(rt->groupe_name);
-	if (rt->grp_len > lst->max_grp_len)
-		lst->max_grp_len = rt->grp_len;
-
-	if (rt->stat.st_size > lst->max_size)
-		lst->max_size = rt->stat.st_size;
-	if (rt->stat.st_nlink > lst->max_nlink)
-		lst->max_nlink = rt->stat.st_nlink;
-	lst->total += rt->stat.st_blocks;
-	if ((rt->stat.st_mode & 0770000) == 0060000 ||
-			(rt->stat.st_mode & 0770000) == 0020000)
-	lst->have_periph = 1;
-	if ((rt->stat.st_mode & 0770000) == 0120000)
-		readlink(rt->path, rt->link_path, 256);
+	prepare_elem_2(lst, rt);
 	return (rt);
 }
 
-void	insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d)
+int				insert_elm_front(t_lst_elem *lst, t_elem *n_elm)
 {
-	t_elem	*elm;
-	t_elem	*n_elm;
-
-	if (d->d_name[0] == '.' && !app->show_hidden)
-		return ;
-	lst->size++;
-	elm = lst->first;
-	n_elm = prepare_elem(app, lst, d);
 	if (!lst->nb_elem)
 	{
 		lst->first = n_elm;
 		lst->last = n_elm;
 		lst->nb_elem++;
-		return ;
+		return (1);
 	}
-	lst->nb_elem++;
-	if (app->compare(app, n_elm, elm))
-	{
-		elm->previous = n_elm;
-		n_elm->next = elm;
-		lst->first = n_elm;
-		return ;
-	}
+	return (0);
+}
+
+void			insert_elm_2(t_app *app, t_lst_elem *lst, t_elem *n_elm,
+								t_elem *elm)
+{
 	while (elm->next)
 	{
 		if (app->compare(app, elm, n_elm) &&
@@ -177,34 +87,25 @@ void	insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d)
 	lst->last = n_elm;
 }
 
-void	pop_elem(t_lst_elem *lst)
+void			insert_elm(t_app *app, t_lst_elem *lst, struct dirent *d)
 {
-	t_elem	*tmp;
+	t_elem	*elm;
+	t_elem	*n_elm;
 
-	tmp = lst->last;
-	if (!lst->nb_elem)
+	if (d->d_name[0] == '.' && !app->show_hidden)
 		return ;
-	else if (lst->nb_elem != 1)
+	lst->size++;
+	elm = lst->first;
+	n_elm = prepare_elem(app, lst, d);
+	if (insert_elm_front(lst, n_elm))
+		return ;
+	lst->nb_elem++;
+	if (app->compare(app, n_elm, elm))
 	{
-		lst->last= lst->last->previous;
-		lst->last->next = 0;
+		elm->previous = n_elm;
+		n_elm->next = elm;
+		lst->first = n_elm;
+		return ;
 	}
-	free(tmp);
-	lst->nb_elem--;
-}
-
-void	clean_lst(t_lst_elem *lst)
-{
-	t_elem *tmp;
-	t_elem *tmp2;
-
-	tmp = lst->first;
-	while (tmp)
-	{
-		tmp2 = tmp->next;
-		if (tmp->path)
-			free(tmp->path);
-		free(tmp);
-		tmp = tmp2;
-	}
+	insert_elm_2(app, lst, n_elm, elm);
 }
